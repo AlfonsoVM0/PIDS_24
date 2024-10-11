@@ -80,7 +80,7 @@ Este documento describe los pasos necesarios para poner en funcionamiento tu ent
 En este punto, tu entorno completo está funcionando correctamente, y los dashboards de Superset deberían reflejar los datos analizados y cargados por Airflow. ¡Disfruta de tu entorno de análisis de datos en tiempo real! 
 
 ### 7. **Acceder al chatbot**
-El fichero ya cuenta con una carpeta `models` en la que se encuentra el modelo ya entrenado y al levantar el docker ya se ejecuta auntomáticamente. Para hacer uso del mismo solo bastará con acceder a la dirección `http://localhost:8088`:
+El fichero ya cuenta con una carpeta `models` en la que se encuentra el modelo ya entrenado y al levantar el docker ya se ejecuta auntomáticamente. Para hacer uso del mismo solo bastará con acceder a la dirección `http://localhost:8081`:
 
 ---
 
