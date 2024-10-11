@@ -1,0 +1,59 @@
+version: "3.1"
+
+rules:
+
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+    - intent: goodbye
+    - action: utter_goodbye
+
+- rule: Say 'I am a bot' anytime the user challenges
+  steps:
+    - intent: bot_challenge
+    - action: utter_iamabot
+
+
+- rule: Respond to average trip duration query
+  steps:
+    - intent: ask_avg_trip_duration
+    - action: action_get_avg_trip_duration
+
+- rule: Respond to average trip distance query
+  steps:
+    - intent: ask_avg_trip_distance
+    - action: action_get_avg_trip_distance
+
+- rule: Respond to max passengers query
+  steps:
+    - intent: ask_max_passengers
+    - action: action_get_max_passengers
+
+- rule: Respond to total revenue query
+  steps:
+    - intent: ask_total_revenue
+    - action: action_get_total_revenue
+
+- rule: Respond to most common payment type query
+  steps:
+    - intent: ask_most_common_payment_type
+    - action: action_get_most_common_payment_type
+
+- rule: Respond to average tip amount query
+  steps:
+    - intent: ask_avg_tip_amount
+    - action: action_get_avg_tip_amount
+
+- rule: Respond to average tolls per trip query
+  steps:
+    - intent: ask_avg_tolls_per_trip
+    - action: action_get_avg_tolls_per_trip
+
+- rule: Respond to most frequent driver query
+  steps:
+    - intent: ask_most_frequent_driver
+    - action: action_get_most_frequent_driver
+
+- rule: Respond to revenue per mile query
+  steps:
+    - intent: ask_revenue_per_mile
+    - action: action_get_revenue_per_mile

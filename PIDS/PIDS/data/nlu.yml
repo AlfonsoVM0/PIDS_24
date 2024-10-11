@@ -1,0 +1,138 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - moin
+    - hey there
+    - let's go
+    - hey dude
+    - goodmorning
+    - goodevening
+    - good afternoon
+
+- intent: goodbye
+  examples: |
+    - cu
+    - good by
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+    - see you later
+
+- intent: affirm
+  examples: |
+    - yes
+    - y
+    - indeed
+    - of course
+    - that sounds good
+    - correct
+
+- intent: deny
+  examples: |
+    - no
+    - n
+    - never
+    - I don't think so
+    - don't like that
+    - no way
+    - not really
+
+- intent: mood_great
+  examples: |
+    - perfect
+    - great
+    - amazing
+    - feeling like a king
+    - wonderful
+    - I am feeling very good
+    - I am great
+    - I am amazing
+    - I am going to save the world
+    - super stoked
+    - extremely good
+    - so so perfect
+    - so good
+    - so perfect
+
+- intent: mood_unhappy
+  examples: |
+    - my day was horrible
+    - I am sad
+    - I don't feel very well
+    - I am disappointed
+    - super sad
+    - I'm so sad
+    - sad
+    - very sad
+    - unhappy
+    - not good
+    - not very good
+    - extremly sad
+    - so saad
+    - so sad
+
+- intent: ask_avg_trip_duration
+  examples: |
+    - What is the average trip duration?
+    - How long do trips usually take?
+    - Tell me the average duration of a trip.
+
+- intent: ask_avg_trip_distance
+  examples: |
+    - What is the average trip distance?
+    - How far do trips usually go?
+    - Tell me the average distance for a trip.
+
+- intent: ask_max_passengers
+  examples: |
+    - What is the maximum number of passengers?
+    - How many people can fit in one trip?
+    - What is the highest number of passengers?
+
+- intent: ask_total_revenue
+  examples: |
+    - What is the total revenue?
+    - How much revenue has been generated?
+    - Tell me the total earnings.
+
+- intent: ask_most_common_payment_type
+  examples: |
+    - What is the most common payment method?
+    - How do most people pay?
+    - Tell me the most frequent payment type.
+
+- intent: ask_avg_tip_amount
+  examples: |
+    - What is the average tip amount?
+    - How much are tips on average?
+    - Tell me the average tip.
+
+- intent: ask_avg_tolls_per_trip
+  examples: |
+    - What is the average toll per trip?
+    - How much are tolls on average?
+    - Tell me the average toll amount.
+
+- intent: ask_most_frequent_driver
+  examples: |
+    - Who is the most frequent driver?
+    - Tell me who drives the most.
+    - Which driver is the most frequent?
+
+- intent: ask_revenue_per_mile
+  examples: |
+    - What is the revenue per mile?
+    - How much revenue is made per mile?
+    - Tell me the revenue per mile.
