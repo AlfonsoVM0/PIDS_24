@@ -1,46 +1,94 @@
-# docker-ml-faq-rassa
-ML FAQ model demo with rasa &amp; Docker 
+# PIDS
+# Documentación del despliegue de aplicación con Docker, PostgreSQL, Airflow y Superset
 
-![Untitled-2022-12-29-1222](https://github.com/harsh4870/docker-ml-faq-rassa/assets/15871000/e2d4064c-3ef9-4640-a488-60c7d48a1608)
+Este documento describe los pasos necesarios para poner en funcionamiento tu entorno completo de análisis de datos de viajes en taxi, utilizando Docker Compose, PostgreSQL, Apache Airflow y Apache Superset.
 
-#### Init Rasa
+## **Requisitos previos**
+- Tener Docker y Docker Compose instalados en el sistema.
+- Haber comprobado los permisos en las carpetas necesarias.
 
-```
-docker run  -p 5005:5005 -v $(pwd):/app <IMAGE>:3.5.2 init --no-prompt
-```
+## **Pasos para el Despliegue**
 
-#### Train Model 
+### 1. **Levantar los contenedores con Docker Compose**
+   Ejecuta el siguiente comando para iniciar todos los contenedores definidos en el archivo `docker-compose.yml`:
 
-```
-docker run -v $(pwd):/app <IMAGE>:3.5.2 train --domain domain.yml --data data --out models
-```
+   ```bash
+   docker compose up -d
+   ```
 
-#### Run model 
+   Esto levantará los contenedores de PostgreSQL, Airflow (webserver y scheduler) y Superset en modo "detached".
 
-```
-docker run -v $(pwd):/app <IMAGE>:3.5.2 shell
-```
+### 2. **Verificar la Base de Datos en PostgreSQL**
+   Conéctate al contenedor de PostgreSQL para verificar que la base de datos y las tablas se hayan creado correctamente:
 
-## WebChat
+   ```bash
+   docker exec -ti pids-postgres-1 bash
+   ```
 
-```
-docker run  -p 5005:5005 -v $(pwd):/app <IMAGE>:3.5.2  run -m models --enable-api --cors "*" --debug
-```
+   Dentro de la consola del contenedor, conéctate a la base de datos `taxi_data`:
 
-#### Build the WebChat UI frontend
+   ```bash
+   psql -U airflow -d taxi_data
+   ```
 
-```
-docker build -t rasa-webchat:v1 -f Dockerfile-webchat .
-```
+   Asegúrate de que las tablas `raw_data` y `analysis_results` se hayan creado correctamente. Estas tablas se generan al iniciar el contenedor, gracias al script `init.sql`.
 
-#### Run
+   ```sql
+   \d
+   ```
 
-```
-docker run -p 8080:80 rasa-webchat:v1
-```
+### 3. **Verificar que las tablas estén vacías**
+   Podemos realizar una consulta simple para verificar que la tabla `raw_data` está vacía (esto es lo esperado, ya que aún no se han cargado datos):
 
-Open `localhost:8080` in Browser
+   ```sql
+   SELECT * FROM raw_data;
+   ```
 
-<img width="1435" alt="Screenshot 2023-06-20 at 1 12 45 PM" src="https://github.com/harsh4870/docker-ml-faq-rassa/assets/15871000/dbc48574-db67-47e9-9b69-a6b3cce9fbcc">
+   La consulta debería devolver un resultado vacío.
+
+### 4. **Acceder a Apache Superset**
+   Abre un navegador web y ve a `http://localhost:8088`. Esto te llevará a la interfaz de Apache Superset.
+
+   - **Usuario**: `admin`
+   - **Contraseña**: `admin`
+
+   Una vez dentro de Superset, navega al dashboard que fue importado automáticamente durante el inicio de los contenedores. En este punto, el dashboard no tendrá datos, ya que la base de datos aún está vacía.
+
+### 5. **Acceder a Apache Airflow**
+   Abre un navegador web y ve a `http://localhost:8080`. Esto te llevará a la interfaz de Apache Airflow.
+   
+   **Importante:** Para que lo siguiente funcione debe haber algún csv en el directorio `data`. En este caso, hay generada una carpeta `csv_por_fecha` en el que están una serie de archivos csv que simulan los datos de cada día durante un mes. Simplemente se puede copiar (uno o varios) a la carpeta `data` antes de ejecutar el DAG.
+
+   - **Usuario**: `admin`
+   - **Contraseña**: `admin`
+
+   Dentro de Airflow:
+   - Ve a la pestaña de "DAGs".
+   - Busca el DAG llamado `load_csv_to_postgres` (importado automáticamente gracias al volumen compartido).
+   - Ejecuta el DAG manualmente (trigger). En un escenario real se podría modificar el DAG para ejecutarse diariamente.
+
+   Si el DAG se ejecuta correctamente, los siguientes pasos ocurrirán automáticamente:
+   - Los archivos CSV en la carpeta `data` se cargan en la tabla `raw_data` de PostgreSQL.
+   - Cada archivo CSV se procesa, y los resultados del análisis se almacenan en la tabla `analysis_results`.
+   - Los archivos CSV procesados se eliminan de la carpeta `data`.
+
+### 6. **Verificar los Datos en Apache Superset**
+   Después de que los datos hayan sido cargados por Airflow, regresa a Superset (`http://localhost:8088`):
+   - Navega al dashboard importado.
+   - Verifica que los gráficos ahora muestran datos, ya que las tablas `raw_data` y `analysis_results` contienen información procesada.
+
+En este punto, tu entorno completo está funcionando correctamente, y los dashboards de Superset deberían reflejar los datos analizados y cargados por Airflow. ¡Disfruta de tu entorno de análisis de datos en tiempo real! 
+
+### 7. *** Acceder al chatbot***
+El fichero ya cuenta con una carpeta `models` en la que se encuentra el modelo ya entrenado y al levantar el docker ya se ejecuta auntomáticamente. Para hacer uso del mismo solo bastará con acceder a la dirección `http://localhost:8088`:
+
+---
+
+## **Notas Adicionales**
+- Si encuentras algún error durante el proceso, revisa los logs de cada contenedor con `docker logs <nombre_del_contenedor>`.
+- El usuario `admin` y la contraseña `admin` se establecen de forma predeterminada durante el despliegue, pero es recomendable cambiarlos para entornos de producción.
+- La carpeta `data` debería contener archivos CSV con los datos que deseas cargar y analizar.
+
+Si sigues estos pasos, podrás poner en funcionamiento tu entorno de análisis de datos de viajes en taxi sin problemas.
 
 
